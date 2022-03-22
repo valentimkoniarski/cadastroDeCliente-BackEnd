@@ -1,28 +1,18 @@
 package com.example.cadastrodecliente.dto;
 
-import java.util.List;
-
-import com.example.cadastrodecliente.model.Endereco;
-import com.example.cadastrodecliente.model.Telefone;
+//import java.util.List;
+//import com.example.cadastrodecliente.model.Endereco;
+//import com.example.cadastrodecliente.model.Telefone;
 import com.example.cadastrodecliente.model.TipoPessoaCliente;
 
 public class ClienteDto {
 
-    private long cliente_id;
     private String nome;
     private String numDocumento;
     private TipoPessoaCliente tipoPessoa;
 
-    private List<Telefone> telefone;
-    private List<Endereco> endereco;
-
-    public long getCliente_id() {
-        return cliente_id;
-    }
-
-    public void setCliente_id(long cliente_id) {
-        this.cliente_id = cliente_id;
-    }
+    //private List<Telefone> telefone;
+    //private List<Endereco> endereco;
 
     public String getNome() {
         return nome;
@@ -48,6 +38,7 @@ public class ClienteDto {
         this.tipoPessoa = tipoPessoa;
     }
 
+    /* 
     public List<Telefone> getTelefone() {
         return telefone;
     }
@@ -62,6 +53,7 @@ public class ClienteDto {
 
     public void setEndereco(List<Endereco> endereco) {
         this.endereco = endereco;
-    }
+    } 
+    */
 
 }
