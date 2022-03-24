@@ -4,10 +4,10 @@ import com.example.cadastrodecliente.dto.ClienteDto;
 import com.example.cadastrodecliente.model.Cliente;
 import com.example.cadastrodecliente.model.Usuario;
 import com.example.cadastrodecliente.repository.ClienteRepository;
-//import com.example.cadastrodecliente.model.Endereco;
-//import com.example.cadastrodecliente.model.Telefone;
-//import com.example.cadastrodecliente.repository.EnderecoRepository;
-//import com.example.cadastrodecliente.repository.TelefoneRepository;
+import com.example.cadastrodecliente.model.Endereco;
+import com.example.cadastrodecliente.model.Telefone;
+import com.example.cadastrodecliente.repository.EnderecoRepository;
+import com.example.cadastrodecliente.repository.TelefoneRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -33,11 +33,11 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    //@Autowired
-    //private EnderecoRepository enderecoRepository;
+    @Autowired
+    private EnderecoRepository enderecoRepository;
 
-    //@Autowired
-    //private TelefoneRepository telefoneRepository;
+    @Autowired
+    private TelefoneRepository telefoneRepository;
 
     @GetMapping
     public ResponseEntity<List<Cliente>> listaDeClientes() {
@@ -96,6 +96,10 @@ public class ClienteController {
         Cliente cliente = clienteRepository.findById(id).get();
 
         clienteRepository.delete(cliente);
+        
+        enderecoRepository.deleteEnderecoByCliente(cliente);
+
+        telefoneRepository.deleteTelefoneByCliente(cliente);
 
         return ResponseEntity.ok(cliente);
 

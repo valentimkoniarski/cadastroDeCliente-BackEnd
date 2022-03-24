@@ -3,6 +3,7 @@ package com.example.cadastrodecliente.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class Usuario implements UserDetails {
 	private Long id;
 	private String nome;
 	private String email;
+
+	@JsonIgnore
 	private String senha;
 
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -55,36 +58,43 @@ public class Usuario implements UserDetails {
 		this.senha = senha;
 	}
 
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.perfis;
 	}
 
+	@JsonIgnore
 	@Override
 	public String getPassword() {
 		return this.senha;
 	}
 
+	@JsonIgnore
 	@Override
 	public String getUsername() {
 		return this.email;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isEnabled() {
 		return true;
