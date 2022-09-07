@@ -35,6 +35,10 @@ public class Cliente {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cliente")
     private List<Telefone> telefone;
 
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cliente")
+    private List<Produto> produto;
+
     private String nome;
     private String numDocumento;
 
@@ -97,6 +101,14 @@ public class Cliente {
 
     public void setTelefone(List<Telefone> telefone) {
         this.telefone = telefone;
+    }
+
+    public List<Produto> getProduto() {
+        return produto;
+    }
+
+    public void setProduto(List<Produto> produto) {
+        this.produto = produto;
     }
 
     public Usuario getUsuario() {

@@ -11,9 +11,6 @@ public class ClienteDto {
     private String numDocumento;
     private TipoPessoaCliente tipoPessoa;
 
-    //private List<Telefone> telefone;
-    //private List<Endereco> endereco;
-
     public String getNome() {
         return nome;
     }
@@ -37,23 +34,4 @@ public class ClienteDto {
     public void setTipoPessoa(TipoPessoaCliente tipoPessoa) {
         this.tipoPessoa = tipoPessoa;
     }
-
-    /* 
-    public List<Telefone> getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(List<Telefone> telefone) {
-        this.telefone = telefone;
-    }
-
-    public List<Endereco> getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(List<Endereco> endereco) {
-        this.endereco = endereco;
-    } 
-    */
-
 }
