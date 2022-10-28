@@ -1,18 +1,16 @@
 package com.example.cadastrodecliente.dto;
 
-import com.example.cadastrodecliente.model.Cliente;
 import com.example.cadastrodecliente.model.ImagensProduto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ProdutoDto {
+public class ProdutoResponseDto {
 
-    private Cliente cliente;
+    private Long id;
 
-    private List<ImagensProdutoDto> imagensProdutos;
+    private List<ImagensProduto> imagensProdutos;
 
     private String nome;
 
@@ -22,12 +20,13 @@ public class ProdutoDto {
 
     private int vendidos;
 
-    public ProdutoDto(Cliente cliente, List<ImagensProdutoDto> imagensProdutos, String nome, String valor, int quantidade, int vendidos) {
-        this.cliente = cliente;
+    public ProdutoResponseDto(Long id, List<ImagensProduto> imagensProdutos, String nome, String valor, int quantidade, int vendidos) {
+        this.id = id;
         this.imagensProdutos = imagensProdutos;
         this.nome = nome;
         this.valor = valor;
         this.quantidade = quantidade;
         this.vendidos = vendidos;
     }
+
 }
