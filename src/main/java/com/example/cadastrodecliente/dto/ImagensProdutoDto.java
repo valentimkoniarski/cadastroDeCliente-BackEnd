@@ -9,6 +9,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class ImagensProdutoDto {
 
+    private Long id;
+
     private Produto produto;
 
     private String nome;

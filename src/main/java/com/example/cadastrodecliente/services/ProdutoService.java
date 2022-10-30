@@ -72,7 +72,7 @@ public class ProdutoService {
         List<ImagensProduto> listaImagens = new ArrayList<>();
 
         for (ImagensProdutoDto img : produtoDto.getImagensProdutos()) {
-            ImagensProdutoDto imagensProdutoDto = new ImagensProdutoDto(produto, img.getNome(), img.getUrl(), img.getDestaque());
+            ImagensProdutoDto imagensProdutoDto = new ImagensProdutoDto(null, produto, img.getNome(), img.getUrl(), img.getDestaque());
             listaImagens.add(imagensProdutoRepository.save(modelMapper.map(imagensProdutoDto, ImagensProduto.class)));
         }
 
