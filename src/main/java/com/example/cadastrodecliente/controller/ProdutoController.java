@@ -1,6 +1,6 @@
 package com.example.cadastrodecliente.controller;
 
-import com.example.cadastrodecliente.dto.ProdutoDto;
+import com.example.cadastrodecliente.dto.produto.ProdutoDto;
 import com.example.cadastrodecliente.model.Produto;
 import com.example.cadastrodecliente.model.Usuario;
 import com.example.cadastrodecliente.services.ProdutoService;
@@ -20,7 +20,7 @@ public class ProdutoController {
     ProdutoService produtoService;
 
     @GetMapping
-    public ResponseEntity<List<Produto>> buscarProdutos(@AuthenticationPrincipal Usuario usuario) {
+    public ResponseEntity<List<Produto>> buscarTodos(@AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.ok(produtoService.buscarTodos(usuario));
     }
     @GetMapping("/{id}")
@@ -30,13 +30,20 @@ public class ProdutoController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<Produto> apagarProduto(@AuthenticationPrincipal Usuario usuario, @PathVariable Long id) {
-        return ResponseEntity.ok(produtoService.apagarProduto(usuario, id));
+    public ResponseEntity<Produto> apagar(@AuthenticationPrincipal Usuario usuario, @PathVariable Long id) {
+        return ResponseEntity.ok(produtoService.apagar(usuario, id));
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Produto> cadastrarProduto(@AuthenticationPrincipal Usuario usuario, @RequestBody ProdutoDto produtoDto) {
-        return ResponseEntity.ok(produtoService.salvarProduto(usuario, produtoDto));
+    public ResponseEntity<Produto> cadastrar(@AuthenticationPrincipal Usuario usuario, @RequestBody ProdutoDto produtoDto) throws Exception {
+        return ResponseEntity.ok(produtoService.salvar(usuario, produtoDto));
     }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity<Produto> atualizar(@AuthenticationPrincipal Usuario usuario, @RequestBody ProdutoDto produtoDto) throws Exception {
+        return ResponseEntity.ok(produtoService.atualizar(usuario, produtoDto));
+    }
+
 }
