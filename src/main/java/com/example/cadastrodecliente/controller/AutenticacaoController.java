@@ -54,8 +54,6 @@ public class AutenticacaoController {
 
         Usuario usuario = register.toUsuario();
 
-        System.out.println(usuarioRepository.findByEmail(usuario.getEmail()));
-
         if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().build();
         }

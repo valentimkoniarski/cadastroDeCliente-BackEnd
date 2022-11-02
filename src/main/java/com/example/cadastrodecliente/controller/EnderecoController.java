@@ -1,72 +1,44 @@
 package com.example.cadastrodecliente.controller;
 
 import java.util.List;
-
 import javax.transaction.Transactional;
-
-import com.example.cadastrodecliente.dto.EnderecoDto;
-import com.example.cadastrodecliente.model.Cliente;
+import com.example.cadastrodecliente.dto.endereco.EnderecoDto;
 import com.example.cadastrodecliente.model.Endereco;
-import com.example.cadastrodecliente.repository.ClienteRepository;
-import com.example.cadastrodecliente.repository.EnderecoRepository;
-
+import com.example.cadastrodecliente.model.Usuario;
+import com.example.cadastrodecliente.services.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/enderecos")
 public class EnderecoController {
 
     @Autowired
-    ClienteRepository clienteRepository;
+    EnderecoService enderecoService;
 
-    @Autowired
-    EnderecoRepository enderecoRepository;
-
-    @GetMapping("/{id}")
-    public ResponseEntity<List<Endereco>> buscarEnderecos(@PathVariable Long id) {
-
-        Cliente cliente = clienteRepository.findById(id).get();
-
-        List<Endereco> enderecos = enderecoRepository.findEnderecoByCliente(cliente);
-
-        return ResponseEntity.ok(enderecos);
-
+    @GetMapping("/{clienteId}")
+    public ResponseEntity<List<Endereco>> buscarTodos(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(enderecoService.buscarTodos(clienteId, usuario));
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{clienteId}")
     @Transactional
-    public ResponseEntity<Endereco> cadastrarEndereco(@PathVariable Long id, @RequestBody EnderecoDto enderecoDto) {
-
-        Cliente cliente = clienteRepository.findById(id).get();
-
-        Endereco enderecoCadastrado = new Endereco(enderecoDto.getRua(), enderecoDto.getNumero(),
-                enderecoDto.getBairro(),
-                enderecoDto.getCidade(), enderecoDto.getPrincipal(), cliente);
-
-        enderecoRepository.save(enderecoCadastrado);
-
-        return ResponseEntity.ok(enderecoCadastrado);
-
+    public ResponseEntity<Endereco> salvar(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario, @RequestBody EnderecoDto enderecoDto) {
+        return ResponseEntity.ok(enderecoService.salvar(clienteId, usuario, enderecoDto));
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{clienteId}")
     @Transactional
-    public ResponseEntity<Endereco> deletarEndereco(@PathVariable Long id) {
+    public ResponseEntity<Endereco> atualizar(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario, @RequestBody EnderecoDto enderecoDto) {
+        return ResponseEntity.ok(enderecoService.atualizar(clienteId, usuario, enderecoDto));
+    }
 
-        Endereco endereco = enderecoRepository.findById(id).get();
-
-        enderecoRepository.delete(endereco);
-
-        return ResponseEntity.ok(endereco);
-
+    @DeleteMapping("/{clienteId}")
+    @Transactional
+    public ResponseEntity<Endereco> deletarEndereco(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario, @RequestBody EnderecoDto enderecoDto) {
+        return ResponseEntity.ok(enderecoService.apagar(clienteId, usuario, enderecoDto));
     }
 
 }

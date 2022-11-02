@@ -12,6 +12,8 @@ public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
 
     List<Endereco> findEnderecoByCliente(Cliente cliente);
 
-    void deleteEnderecoByCliente(Cliente cliente);
+    Endereco findEnderecoByIdAndCliente(Long enderecoId, Cliente cliente);
+
+
 
 }

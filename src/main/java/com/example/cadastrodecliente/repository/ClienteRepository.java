@@ -16,6 +16,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     @Query(value = "SELECT * FROM cliente WHERE usuario_id = :userId", nativeQuery = true)
     List<Cliente> findClienteByUsuario(@Param("userId") Long userId);
 
-    Cliente findOneClienteByUsuario(Usuario usuario);
+    Cliente findClienteByIdAndUsuario(Long clienteId, Usuario usuario);
 
 }

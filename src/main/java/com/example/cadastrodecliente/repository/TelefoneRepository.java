@@ -11,6 +11,8 @@ public interface TelefoneRepository extends JpaRepository<Telefone, Long> {
 
     List<Telefone> findTelefoneByCliente(Cliente cliente);
 
+    Telefone findTelefoneByIdAndCliente(Long telefoneId, Cliente cliente);
+
     void deleteTelefoneByCliente(Cliente cliente);
 
 }

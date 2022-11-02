@@ -1,24 +1,17 @@
 package com.example.cadastrodecliente.controller;
 
 import java.util.List;
-
 import javax.transaction.Transactional;
-
-import com.example.cadastrodecliente.dto.TelefoneDto;
-import com.example.cadastrodecliente.model.Cliente;
+import com.example.cadastrodecliente.dto.telefone.TelefoneDto;
 import com.example.cadastrodecliente.model.Telefone;
+import com.example.cadastrodecliente.model.Usuario;
 import com.example.cadastrodecliente.repository.ClienteRepository;
 import com.example.cadastrodecliente.repository.TelefoneRepository;
-
+import com.example.cadastrodecliente.services.TelefoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/telefones")
@@ -30,42 +23,30 @@ public class TelefoneController {
     @Autowired
     TelefoneRepository telefoneRepository;
 
-    @GetMapping("/{cliente_id}")
-    public ResponseEntity<List<Telefone>> buscarTelefones(@PathVariable Long cliente_id) {
+    @Autowired
+    TelefoneService telefoneService;
 
-        Cliente cliente = clienteRepository.findById(cliente_id).get();
-
-        List<Telefone> telefones = telefoneRepository.findTelefoneByCliente(cliente);
-
-        return ResponseEntity.ok(telefones);
-
+    @GetMapping("/{clienteId}")
+    public ResponseEntity<List<Telefone>> buscarTelefones(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(telefoneService.buscarTodos(clienteId, usuario));
     }
 
-    @PostMapping("/{cliente_id}")
+    @PostMapping("/{clienteId}")
     @Transactional
-    public ResponseEntity<Telefone> cadastrarTelefone(@PathVariable Long cliente_id,
-            @RequestBody TelefoneDto telefoneDto) {
-
-        Cliente cliente = clienteRepository.findById(cliente_id).get();
-
-        Telefone telefone = new Telefone(telefoneDto.getNumero(), cliente);
-
-        telefoneRepository.save(telefone);
-
-        return ResponseEntity.ok(telefone);
-
+    public ResponseEntity<Telefone> salvar(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario, @RequestBody TelefoneDto telefoneDto) {
+        return ResponseEntity.ok(telefoneService.salvar(clienteId, usuario, telefoneDto));
     }
 
-    @DeleteMapping("/{telefone_id}")
+    @PutMapping("/{clienteId}")
     @Transactional
-    public ResponseEntity<Telefone> deletarTelefone(@PathVariable Long telefone_id) {
+    public ResponseEntity<Telefone> atualizar(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario, @RequestBody TelefoneDto telefoneDto) {
+        return ResponseEntity.ok(telefoneService.atualizar(clienteId, usuario, telefoneDto));
+    }
 
-        Telefone telefone = telefoneRepository.findById(telefone_id).get();
-
-        telefoneRepository.delete(telefone);
-
-        return ResponseEntity.ok(telefone);
-
+    @DeleteMapping("/{clienteId}")
+    @Transactional
+    public ResponseEntity<Telefone> apagar(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario, @RequestBody TelefoneDto telefoneDto) {
+        return ResponseEntity.ok(telefoneService.apagar(clienteId, usuario, telefoneDto));
     }
 
 }

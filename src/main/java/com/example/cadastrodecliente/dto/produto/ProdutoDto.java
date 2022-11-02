@@ -1,21 +1,29 @@
 package com.example.cadastrodecliente.dto.produto;
 
+import com.example.cadastrodecliente.dto.cliente.ClienteDto;
 import com.example.cadastrodecliente.dto.imagensProduto.ImagensProdutoDto;
-import com.example.cadastrodecliente.model.Cliente;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 public class ProdutoDto {
 
     private Long id;
-    private Cliente cliente;
-    private List<ImagensProdutoDto> imagensProdutos;
+    private ClienteDto clienteDto;
+    private List<ImagensProdutoDto> imagens;
     private String nome;
     private String valor;
     private int quantidade;
     private int vendidos;
 
+    public ProdutoDto(Long id, ClienteDto clienteDto, List<ImagensProdutoDto> imagens, String nome, String valor, int quantidade, int vendidos) {
+        this.id = id;
+        this.clienteDto = clienteDto;
+        this.imagens = imagens;
+        this.nome = nome;
+        this.valor = valor;
+        this.quantidade = quantidade;
+        this.vendidos = vendidos;
+    }
 }

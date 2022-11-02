@@ -5,6 +5,7 @@ import com.example.cadastrodecliente.model.Produto;
 import com.example.cadastrodecliente.model.Usuario;
 import com.example.cadastrodecliente.services.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -19,31 +20,27 @@ public class ProdutoController {
     @Autowired
     ProdutoService produtoService;
 
-    @GetMapping
-    public ResponseEntity<List<Produto>> buscarTodos(@AuthenticationPrincipal Usuario usuario) {
-        return ResponseEntity.ok(produtoService.buscarTodos(usuario));
-    }
-    @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(produtoService.buscarPorId(id));
+    @GetMapping("/{clienteId}")
+    public ResponseEntity<List<Produto>> buscarTodos(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(produtoService.buscarTodos(clienteId, usuario));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{clienteId}")
     @Transactional
-    public ResponseEntity<Produto> apagar(@AuthenticationPrincipal Usuario usuario, @PathVariable Long id) {
-        return ResponseEntity.ok(produtoService.apagar(usuario, id));
+    public ResponseEntity<Produto> apagar(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario, @RequestBody ProdutoDto produtoDto) {
+        return ResponseEntity.ok(produtoService.apagar(clienteId, usuario, produtoDto));
     }
 
-    @PostMapping
+    @PostMapping("/{clienteId}")
     @Transactional
-    public ResponseEntity<Produto> cadastrar(@AuthenticationPrincipal Usuario usuario, @RequestBody ProdutoDto produtoDto) throws Exception {
-        return ResponseEntity.ok(produtoService.salvar(usuario, produtoDto));
+    public ResponseEntity<Produto> salvar(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario, @RequestBody ProdutoDto produtoDto) throws Exception {
+        return ResponseEntity.ok(produtoService.salvar(clienteId, usuario, produtoDto));
     }
 
-    @PutMapping
+    @PutMapping("/{clienteId}")
     @Transactional
-    public ResponseEntity<Produto> atualizar(@AuthenticationPrincipal Usuario usuario, @RequestBody ProdutoDto produtoDto) throws Exception {
-        return ResponseEntity.ok(produtoService.atualizar(usuario, produtoDto));
+    public ResponseEntity<Produto> atualizar(@PathVariable Long clienteId, @AuthenticationPrincipal Usuario usuario, @RequestBody ProdutoDto produtoDto) throws Exception {
+        return ResponseEntity.ok(produtoService.atualizar(clienteId, usuario, produtoDto));
     }
 
 }

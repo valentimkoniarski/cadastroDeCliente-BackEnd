@@ -45,38 +45,38 @@ public class ProdutoService {
     }
 
     @Transactional
-    public List<Produto> buscarTodos(Usuario usuario) {
-        Cliente cliente = clienteRepository.findOneClienteByUsuario(usuario);
+    public List<Produto> buscarTodos(Long clienteId, Usuario usuario) {
+        Cliente cliente = clienteRepository.findClienteByIdAndUsuario(clienteId, usuario);
         return produtoRepository.findProdutosByCliente(cliente);
     }
 
     @Transactional
-    public Produto apagar(Usuario usuario, Long id) {
-        Cliente cliente = clienteRepository.findById(usuario.getId()).get();
-        Produto produto = produtoRepository.findProdutoByIdAndClienteId(id, cliente.getId());
+    public Produto apagar(Long clienteId, Usuario usuario, ProdutoDto produtoDto) {
+        Cliente cliente = clienteRepository.findClienteByIdAndUsuario(clienteId, usuario);
+        Produto produto = produtoRepository.findProdutoByIdAndClienteId(produtoDto.getId(), cliente.getId());
         produtoRepository.delete(produto);
         return produto;
     }
 
     @Transactional
-    public Produto salvar(Usuario usuario, ProdutoDto produtoDto) throws Exception {
+    public Produto salvar(Long clienteId, Usuario usuario, ProdutoDto produtoDto) throws Exception {
         if (!isValidSave(produtoDto)) {
             throw new Exception("Não foi possivel salvar o registro");
         }
-        return getProdutoResponse(usuario, produtoDto);
+        return getProdutoResponse(clienteId, usuario, produtoDto);
     }
 
     @Transactional
-    public Produto atualizar(Usuario usuario, ProdutoDto produtoDto) throws Exception {
+    public Produto atualizar(Long clienteId, Usuario usuario, ProdutoDto produtoDto) throws Exception {
         if (!isValidUpdate(produtoDto)) {
             throw new Exception("Não foi possivel atualizar o registro");
         }
-        return getProdutoResponse(usuario, produtoDto);
+        return getProdutoResponse(clienteId, usuario, produtoDto);
     }
 
-    protected Produto getProdutoResponse(Usuario usuario, ProdutoDto produtoDto) throws Exception {
-        Produto produto = this.saveProduto(usuario, produtoDto);
-        List<ImagensProduto> imagensProduto = this.saveImagensProduto(produto, produtoDto.getImagensProdutos());
+    protected Produto getProdutoResponse(Long clienteId, Usuario usuario, ProdutoDto produtoDto) throws Exception {
+        Produto produto = this.saveProduto(clienteId, usuario, produtoDto);
+        List<ImagensProduto> imagensProduto = this.saveImagensProduto(produto, produtoDto.getImagens());
 
         ProdutoResponseDto produtoResponseDto = new ProdutoResponseDto(
                 produto.getId(),
@@ -90,11 +90,11 @@ public class ProdutoService {
         return modelMapper.map(produtoResponseDto, Produto.class);
     }
 
-    private Produto saveProduto(Usuario usuario, ProdutoDto produtoDto) throws Exception {
-        Cliente cliente = clienteRepository.findById(usuario.getId()).get();
+    private Produto saveProduto(Long clienteId, Usuario usuario, ProdutoDto produtoDto) throws Exception {
+        Cliente cliente = clienteRepository.findClienteByIdAndUsuario(clienteId, usuario);
 
         if (isEmpty(cliente)) {
-            throw new Exception("Cliente não consta na base de dados");
+            throw new Exception("Cliente não consta na base de dados do usuario logado");
         }
 
         ProdutoSalvarDto produtoSalvarDto = new ProdutoSalvarDto(
@@ -134,8 +134,8 @@ public class ProdutoService {
             isUpdate.set(false);
         }
 
-        if (nonNull(produtoDto.getImagensProdutos())) {
-            produtoDto.getImagensProdutos().stream().forEach(imagem -> {
+        if (nonNull(produtoDto.getImagens())) {
+            produtoDto.getImagens().stream().forEach(imagem -> {
                 if (isEmpty(imagem.getId())) {
                     isUpdate.set(false);
                 }
@@ -158,7 +158,7 @@ public class ProdutoService {
             }
         }
 
-        produtoDto.getImagensProdutos().stream().forEach(imagem -> {
+        produtoDto.getImagens().stream().forEach(imagem -> {
             if (nonNull(imagem.getId())) {
                 isSave.set(false);
             }
