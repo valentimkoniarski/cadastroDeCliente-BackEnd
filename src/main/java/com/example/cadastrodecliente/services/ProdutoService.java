@@ -1,6 +1,6 @@
 package com.example.cadastrodecliente.services;
 
-import com.example.cadastrodecliente.dto.ImagensProdutoDto;
+import com.example.cadastrodecliente.dto.imagensProduto.ImagensProdutoDto;
 import com.example.cadastrodecliente.dto.produto.ProdutoDto;
 import com.example.cadastrodecliente.dto.produto.ProdutoResponseDto;
 import com.example.cadastrodecliente.dto.produto.ProdutoSalvarDto;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import static java.util.Objects.nonNull;
@@ -45,7 +46,7 @@ public class ProdutoService {
 
     @Transactional
     public List<Produto> buscarTodos(Usuario usuario) {
-        Cliente cliente = clienteRepository.findById(usuario.getId()).get();
+        Cliente cliente = clienteRepository.findOneClienteByUsuario(usuario);
         return produtoRepository.findProdutosByCliente(cliente);
     }
 
@@ -57,21 +58,19 @@ public class ProdutoService {
         return produto;
     }
 
+    @Transactional
     public Produto salvar(Usuario usuario, ProdutoDto produtoDto) throws Exception {
-
         if (!isValidSave(produtoDto)) {
             throw new Exception("Não foi possivel salvar o registro");
         }
-
         return getProdutoResponse(usuario, produtoDto);
     }
 
+    @Transactional
     public Produto atualizar(Usuario usuario, ProdutoDto produtoDto) throws Exception {
-
         if (!isValidUpdate(produtoDto)) {
             throw new Exception("Não foi possivel atualizar o registro");
         }
-
         return getProdutoResponse(usuario, produtoDto);
     }
 
@@ -91,8 +90,12 @@ public class ProdutoService {
         return modelMapper.map(produtoResponseDto, Produto.class);
     }
 
-    private Produto saveProduto(Usuario usuario, ProdutoDto produtoDto) {
+    private Produto saveProduto(Usuario usuario, ProdutoDto produtoDto) throws Exception {
         Cliente cliente = clienteRepository.findById(usuario.getId()).get();
+
+        if (isEmpty(cliente)) {
+            throw new Exception("Cliente não consta na base de dados");
+        }
 
         ProdutoSalvarDto produtoSalvarDto = new ProdutoSalvarDto(
                 produtoDto.getId(),
@@ -131,15 +134,16 @@ public class ProdutoService {
             isUpdate.set(false);
         }
 
-        produtoDto.getImagensProdutos().stream().forEach(imagem -> {
-            if (isEmpty(imagem.getId())) {
-                isUpdate.set(false);
-            }
-            if (imagem.getProduto().getId() != produtoDto.getId()) {
-                isUpdate.set(false);
-            }
-        });
-
+        if (nonNull(produtoDto.getImagensProdutos())) {
+            produtoDto.getImagensProdutos().stream().forEach(imagem -> {
+                if (isEmpty(imagem.getId())) {
+                    isUpdate.set(false);
+                }
+                if (!Objects.equals(imagensProdutoRepository.findById(imagem.getId()).get().getProduto().getId(), produtoDto.getId())) {
+                    isUpdate.set(false);
+                }
+            });
+        }
         return isUpdate.get();
     }
 

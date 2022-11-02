@@ -1,6 +1,5 @@
 package com.example.cadastrodecliente.dto.produto;
 
-import com.example.cadastrodecliente.dto.ImagensProdutoDto;
 import com.example.cadastrodecliente.model.ImagensProduto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

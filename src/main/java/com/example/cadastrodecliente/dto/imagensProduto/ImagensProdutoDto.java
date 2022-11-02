@@ -1,4 +1,4 @@
-package com.example.cadastrodecliente.dto;
+package com.example.cadastrodecliente.dto.imagensProduto;
 
 import com.example.cadastrodecliente.model.Produto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
